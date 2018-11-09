@@ -12,17 +12,34 @@
     "prepare": "tsc --outDir dist/es6 --module es2015 --target es2015 && tsc --outDir dist/commonjs --module commonjs --target es5",
     "watch": "tsc --outDir dist/es6 --module es2015 --target es2015 -w"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "WSDOT",
   "license": "Unlicense",
   "dependencies": {
     "wsdot-route-utils": "^1.4.0"
   },
   "devDependencies": {
-    "source-map": "^0.7.3",
     "prettier": "^1.15.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.1.6"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WSDOT-GIS/route-selector.git"
+  },
+  "keywords": [
+    "wsdot",
+    "route",
+    "sr",
+    "rrt",
+    "rrq"
+  ],
+  "bugs": {
+    "url": "https://github.com/WSDOT-GIS/route-selector/issues"
+  },
+  "homepage": "https://github.com/WSDOT-GIS/route-selector#readme"
 }

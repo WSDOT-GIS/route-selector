@@ -2,21 +2,49 @@
  * @fileoverview Defines the <route-selector> custom element.
  */
 
-// import { RouteDescription } from "wsdot-route-utils";
+// tslint:disable:max-classes-per-file
 
+/**
+ * An error that is thrown when a function receives an invalidly formatted route ID.
+ */
+export class RouteFormatError extends Error {
+  /**
+   * Creates a new instance of this error class.
+   * @param routeId The invalid route ID.
+   */
+  constructor(routeId: string) {
+    super(`Invalid route format: ${routeId}`);
+  }
+}
+
+/**
+ * Splits a WSDOT route identifier into its SR, RRT, RRQ, and direction components.
+ * @param routeId A state route identifier.
+ * @returns an array of four string elements: SR, RRT, RRQ, direction. (All but the SR element could be null.)
+ * @throws {RouteFormatError} Thrown if routeId is not a properly formatted WSDOT route ID.
+ */
 function splitRouteID(
   routeId: string
 ): [string, string | null, string | null, string | null] {
   const re = /^(\d{3})(?:(\w{2})(\w{0,6}?))?([id]?)$/;
   const match = routeId.match(re);
   if (!match) {
-    throw new Error("Route ID not in correct format");
+    throw new RouteFormatError(routeId);
   }
 
   const [, sr, rrt, rrq, dir] = match;
   return [sr, rrt || null, rrq || null, dir || null];
 }
 
+/**
+ * Comparison function used for sorting route ID strings.
+ *
+ * 1. Compare SR values
+ * 2. Compare numerical RRQ values.
+ * 3. Standard string compare.
+ * @param a Route ID
+ * @param b Route ID
+ */
 function compareRouteIds(a: string, b: string): number {
   if (a === b) {
     return 0;
@@ -49,11 +77,14 @@ function compareRouteIds(a: string, b: string): number {
   return a.localeCompare(b);
 }
 
+/**
+ * Routes grouped by three digit route IDs.
+ */
 export interface IGroupedRoutes {
   [sr: string]: string[];
 }
 
-export class WsdotRouteSelector extends HTMLElement {
+export class RouteSelector extends HTMLElement {
   static get observedAttributes() {
     return ["routes"];
   }
@@ -115,6 +146,12 @@ export class WsdotRouteSelector extends HTMLElement {
       this.populateBoxes(newValue);
     }
   }
+  private dispatchInvalidRouteEvent(routeId: string) {
+    const customEvent = new CustomEvent("invalidroute", {
+      detail: { routeId }
+    });
+    this.dispatchEvent(customEvent);
+  }
   private populateBoxes(routes: string) {
     // Clear existing content.
     this.routeSelect.innerHTML = "";
@@ -122,18 +159,26 @@ export class WsdotRouteSelector extends HTMLElement {
     const routeList = routes.split(/[,\s]+/).sort();
     this.routeGroups = {};
     for (const routeId of routeList) {
-      const [sr, rrt, rrq, dir] = splitRouteID(routeId);
-      if (!this.routeGroups[sr!]) {
-        this.routeGroups[sr!] = [];
-        const option = document.createElement("option");
-        option.textContent = sr;
-        this.routeSelect.appendChild(option);
+      try {
+        const [sr, rrt, rrq, dir] = splitRouteID(routeId);
+        if (!this.routeGroups[sr!]) {
+          this.routeGroups[sr!] = [];
+          const option = document.createElement("option");
+          option.textContent = sr;
+          this.routeSelect.appendChild(option);
+        }
+        const rrtRrqList = this.routeGroups[sr!];
+        rrtRrqList.push(routeId);
+      } catch (err) {
+        if (err instanceof RouteFormatError) {
+          this.dispatchInvalidRouteEvent(routeId);
+        } else {
+          throw err;
+        }
       }
-      const rrtRrqList = this.routeGroups[sr!];
-      rrtRrqList.push(routeId);
     }
     this.populateRrtRrqBox();
   }
 }
 
-customElements.define("route-selector", WsdotRouteSelector);
+customElements.define("route-selector", RouteSelector);
