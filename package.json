@@ -1,6 +1,6 @@
 {
   "name": "@wsdot/route-selector",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Control for selecting WSDOT routes",
   "main": "index.js",
   "module": "index",

@@ -2,8 +2,8 @@
 
 A custom element for selecting WSDOT routes.
 
-[![npm](https://img.shields.io/npm/v/@wsdot/route-select.svg?style=flat-square)](https://www.npmjs.org/package/@wsdot/route-select)
-[![npm](https://img.shields.io/npm/l/@wsdot/route-select.svg?style=flat-square)](https://www.npmjs.org/package/@wsdot/route-select)
+[![npm](https://img.shields.io/npm/v/@wsdot/route-selector.svg?style=flat-square)](https://www.npmjs.org/package/@wsdot/route-selector)
+[![npm](https://img.shields.io/npm/l/@wsdot/route-selector.svg?style=flat-square)](https://www.npmjs.org/package/@wsdot/route-selector)
 
 ## Usage
 
@@ -11,7 +11,6 @@ A custom element for selecting WSDOT routes.
 
 ```sh
 npm install @wsdot/route-selector
-
 ```
 
 ### Reference module from HTML.
