@@ -84,13 +84,25 @@ export interface IGroupedRoutes {
   [sr: string]: string[];
 }
 
+/**
+ * Route Selector custom HTML Element class.
+ */
 export class RouteSelector extends HTMLElement {
+  /**
+   * Defines which attributes will be observed by this class.
+   */
   static get observedAttributes() {
     return ["routes"];
   }
   private readonly routeSelect: HTMLSelectElement;
   private readonly rrtRrqSelect: HTMLSelectElement;
+  /**
+   * routes grouped by SR will be stored here.
+   */
   private routeGroups: IGroupedRoutes = {};
+  public get value() {
+    return this.rrtRrqSelect.value;
+  }
   constructor() {
     super();
 

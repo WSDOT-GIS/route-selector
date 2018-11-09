@@ -11,7 +11,7 @@ A custom element for selecting WSDOT routes.
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>test</title>
     <!-- Import the javascript module -->
-    <script src="node_modules/@wsdot/route-selector/dist/es6/index.js" type="module"></script>
+    <script src="node_modules/@wsdot/route-selector/index.mjs" type="module"></script>
   </head>
   <body>
     <route-selector id="routeSelector"></route-selector>
