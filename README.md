@@ -2,12 +2,16 @@
 
 A custom element for selecting WSDOT routes.
 
+[![npm](https://img.shields.io/npm/v/@wsdot/route-select.svg?style=flat-square)](https://www.npmjs.org/package/@wsdot/route-select)
+[![npm](https://img.shields.io/npm/l/@wsdot/route-select.svg?style=flat-square)](https://www.npmjs.org/package/@wsdot/route-select)
+
 ## Usage
 
 ### Install
 
 ```sh
 npm install @wsdot/route-selector
+
 ```
 
 ### Reference module from HTML.
@@ -26,7 +30,7 @@ npm install @wsdot/route-selector
   <body>
     <route-selector id="routeSelector"></route-selector>
     <script>
-        // Define routes.
+      // Define routes.
       const routes = [
         "002COBROWNEi",
         "002CODIVISNi",
@@ -40,7 +44,9 @@ npm install @wsdot/route-selector
         // ... truncated list
       ];
       // Add value to 'routes' attribute as comma-separated list string.
-      document.querySelector("route-selector").setAttribute("routes", routes.join(","));
+      document
+        .querySelector("route-selector")
+        .setAttribute("routes", routes.join(","));
     </script>
   </body>
 </html>
