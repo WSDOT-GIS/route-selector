@@ -1,0 +1,28 @@
+{
+  "name": "@wsdot/route-selector",
+  "version": "0.0.1",
+  "description": "Control for selecting WSDOT routes",
+  "main": "dist/commonjs/index.js",
+  "module": "dist/es6/index",
+  "types": "dist/es6/index.d.ts",
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "prepare": "tsc --outDir dist/es6 --module es2015 --target es2015 && tsc --outDir dist/commonjs --module commonjs --target es5",
+    "watch": "tsc --outDir dist/es6 --module es2015 --target es2015 -w"
+  },
+  "author": "WSDOT",
+  "license": "Unlicense",
+  "dependencies": {
+    "wsdot-route-utils": "^1.4.0"
+  },
+  "devDependencies": {
+    "source-map": "^0.7.3",
+    "prettier": "^1.15.1",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^3.1.6"
+  }
+}

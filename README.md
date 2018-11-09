@@ -1,0 +1,37 @@
+# WSDOT route-select element
+
+A custom element for selecting WSDOT routes.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>test</title>
+    <!-- Import the javascript module -->
+    <script src="node_modules/@wsdot/route-selector/dist/es6/index.js" type="module"></script>
+  </head>
+  <body>
+    <route-selector id="routeSelector"></route-selector>
+    <script>
+        // Define routes.
+      const routes = [
+        "002COBROWNEi",
+        "002CODIVISNi",
+        "002CONEWPRTd",
+        "002CONEWPRTi",
+        "002d",
+        "002FD00186i",
+        "002FD00504d",
+        "002FD00504i",
+        "002FD01361d"
+        // ... truncated list
+      ];
+      // Add value to 'routes' attribute as comma-separated list string.
+      document.querySelector("route-selector").setAttribute("routes", routes.join(","));
+    </script>
+  </body>
+</html>
+```
