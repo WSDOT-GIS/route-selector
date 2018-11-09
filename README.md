@@ -2,6 +2,16 @@
 
 A custom element for selecting WSDOT routes.
 
+## Usage
+
+### Install
+
+```sh
+npm install @wsdot/route-selector
+```
+
+### Reference module from HTML.
+
 ```html
 <!DOCTYPE html>
 <html lang="en">

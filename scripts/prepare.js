@@ -1,23 +1,32 @@
+/**
+ * @fileoverview Script that builds TypeScript to js module,
+ * renames extension from js to mjs,
+ * then builds commonjs module from TypeScript
+ */
 const { exec } = require("child_process");
 const fs = require("fs");
 
-exec("tsc --declaration", (error, stdout, stderr) => {
-  if (error) {
-    console.error(error);
-  }
-  if (!error) {
-    fs.rename("index.js", "index.mjs", err => {
-      if (err) {
-        console.error("rename error", err);
+/**
+ * Wrap exec function and return a promise.
+ * @param {string} command
+ * @returns {Promise}
+ */
+async function asyncExec(command) {
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        reject({ error, stdout, stderr });
       } else {
-        exec("tsc --target es5 --module commonjs", err => {
-          if (err) {
-            console.error("tsc 2 error", err);
-          }
-        })
+        resolve({ error, stdout, stderr });
       }
     });
-  }
-});
+  });
+}
 
-// fs.exists("index.js")
+(async () => {
+  await asyncExec("tsc --declaration");
+  await fs.promises.rename("index.js", "index.mjs");
+  await asyncExec("tsc --target es5 --module commonjs");
+})();
+
+
