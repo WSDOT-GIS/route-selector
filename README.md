@@ -13,7 +13,7 @@ A custom element for selecting WSDOT routes.
 npm install @wsdot/route-selector
 ```
 
-### Reference module from HTML.
+### Reference module from HTML
 
 ```html
 <!DOCTYPE html>
