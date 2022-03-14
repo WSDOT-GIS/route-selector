@@ -1,6 +1,6 @@
 # WSDOT route-select element
 
-A custom element for selecting WSDOT routes.
+A [Web Components] custom element for selecting WSDOT routes.
 
 [![npm](https://img.shields.io/npm/v/@wsdot/route-selector.svg?style=flat-square)](https://www.npmjs.org/package/@wsdot/route-selector)
 [![npm](https://img.shields.io/npm/l/@wsdot/route-selector.svg?style=flat-square)](https://www.npmjs.org/package/@wsdot/route-selector)
@@ -13,7 +13,7 @@ A custom element for selecting WSDOT routes.
 npm install @wsdot/route-selector
 ```
 
-### Reference module from HTML
+### Reference the module from HTML
 
 ```html
 <!DOCTYPE html>
@@ -23,13 +23,15 @@ npm install @wsdot/route-selector
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>test</title>
-    <!-- Import the javascript module -->
-    <script src="node_modules/@wsdot/route-selector/index.mjs" type="module"></script>
+    <!-- Import the javascript module. This example is loading it from a CDN. 
+    You can get CDN links from https://yarnpkg.com/package/@wsdot/route-selector -->
+    <script src="https://cdn.jsdelivr.net/npm/@wsdot/route-selector@0.0.2/index.mjs" type="module"></script>
   </head>
   <body>
     <route-selector id="routeSelector"></route-selector>
     <script>
       // Define routes.
+      // In a real application these route IDs would be loaded from a web service rather than being hard-coded.
       const routes = [
         "002COBROWNEi",
         "002CODIVISNi",
@@ -50,3 +52,5 @@ npm install @wsdot/route-selector
   </body>
 </html>
 ```
+
+[Web Components]:https://developer.mozilla.org/en-US/docs/Web/Web_Components
