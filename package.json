@@ -19,12 +19,9 @@
   "author": "WSDOT",
   "license": "Unlicense",
   "devDependencies": {
-    "@types/node": "^17.0.21",
-    "prettier": "^2.5.1",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.3.0",
-    "typescript": "^4.6.2"
+    "@types/node": "^18.11.18",
+    "prettier": "^2.8.3",
+    "typescript": "^4.9.4"
   },
   "repository": {
     "type": "git",
