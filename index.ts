@@ -116,10 +116,8 @@ export class RouteSelector extends HTMLElement {
     wrapper.appendChild(this.rrtRrqSelect);
     shadowRoot.appendChild(wrapper);
 
-    const self = this;
-
     this.routeSelect.addEventListener("change", () => {
-      self.populateRrtRrqBox();
+      this.populateRrtRrqBox();
     });
 
     const routeList = this.getAttribute("routes");
