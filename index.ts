@@ -49,6 +49,7 @@ function compareRouteIds(a: string, b: string): number {
   if (a === b) {
     return 0;
   }
+  // cspell: disable
   const [asr, arrt, arrq, adir] = splitRouteID(a);
   const [bsr, brrt, brrq, bdir] = splitRouteID(b);
 
@@ -75,6 +76,7 @@ function compareRouteIds(a: string, b: string): number {
     }
   }
   return a.localeCompare(b);
+  // cspell: enable
 }
 
 /**
@@ -114,10 +116,8 @@ export class RouteSelector extends HTMLElement {
     wrapper.appendChild(this.rrtRrqSelect);
     shadowRoot.appendChild(wrapper);
 
-    const self = this;
-
     this.routeSelect.addEventListener("change", () => {
-      self.populateRrtRrqBox();
+      this.populateRrtRrqBox();
     });
 
     const routeList = this.getAttribute("routes");
