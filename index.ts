@@ -1,9 +1,51 @@
 /**
  * @fileoverview Defines the <route-selector> custom element.
  */
+import {
+  RouteDescription,
+  type RouteIdParseOptions,
+} from "wsdot-route-utils";
+import { FormatError } from "wsdot-route-utils";
 
-// tslint:disable:max-classes-per-file
+export type NonZeroDigits = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type AnyDigit = NonZeroDigits | 0;
+/**
+ * A three-digit mainline route identifier. At least one digit must be non-zero.
+ */
+export type ThreeDigitSRId =
+  | `00${NonZeroDigits}`
+  | `${NonZeroDigits}${AnyDigit}${AnyDigit}`;
 
+export interface RouteIdEnumerationOptions extends RouteIdParseOptions {
+  throwOnFormatError?: boolean;
+}
+
+function* enumerateRouteStringsAsDefinitions(
+  routeIds: Iterable<string>,
+  options?: RouteIdEnumerationOptions
+) {
+  for (const rId of routeIds) {
+    let routeDescription;
+    // Try to parse the string into a RouteDescription.
+    // Depending on the options specified, either rethrow
+    // the error or skip to the next item.
+    try {
+      routeDescription = new RouteDescription(rId, options);
+    } catch (e) {
+      if (!(e instanceof FormatError) || options?.throwOnFormatError) {
+        console.error(e);
+        throw e;
+      }
+      console.warn(
+        `Error parsing routeId: ${rId} in ${enumerateRouteStringsAsDefinitions.name}`,
+        e
+      );
+      continue;
+    }
+    // If there was no error, yield the current item.
+    yield routeDescription;
+  }
+}
 /**
  * An error that is thrown when a function receives an invalidly formatted route ID.
  */
@@ -35,34 +77,31 @@ function splitRouteID(
   const [, sr, rrt, rrq, dir] = match;
   return [sr, rrt || null, rrq || null, dir || null];
 }
-
 /**
  * Comparison function used for sorting route ID strings.
  *
  * 1. Compare SR values
  * 2. Compare numerical RRQ values.
+ * 3. Compare directions. "i" or empty string comes before "d".
  * 3. Standard string compare.
  * @param a Route ID
  * @param b Route ID
  */
-function compareRouteIds(a: string, b: string): number {
+function compareRouteIds(a: string, b: string) {
   if (a === b) {
     return 0;
   }
   // cspell: disable
   const [asr, arrt, arrq, adir] = splitRouteID(a);
   const [bsr, brrt, brrq, bdir] = splitRouteID(b);
-
   if (asr !== bsr) {
     return asr.localeCompare(bsr);
   }
-
   if (!arrt) {
     return -1;
   } else if (!brrt) {
     return 1;
   }
-
   if (arrq !== brrq) {
     if (!arrq) {
       return 1;
@@ -70,9 +109,16 @@ function compareRouteIds(a: string, b: string): number {
     if (!brrq) {
       return -1;
     }
-    const [amp, bmp] = [arrq, brrq].map(s => parseInt(s, 10));
+    const [amp, bmp] = [arrq, brrq].map((s) => parseInt(s, 10));
     if (!isNaN(amp) && !isNaN(bmp)) {
       return amp === bmp ? 0 : amp > bmp ? 1 : -1;
+    }
+  }
+  if (adir !== bdir) {
+    if ((adir === "i" || !adir) && bdir === "d") {
+      return -1;
+    } else if ((bdir === "i" || !bdir) && adir === "d") {
+      return 1;
     }
   }
   return a.localeCompare(b);
@@ -160,7 +206,7 @@ export class RouteSelector extends HTMLElement {
   }
   private dispatchInvalidRouteEvent(routeId: string) {
     const customEvent = new CustomEvent("invalidroute", {
-      detail: { routeId }
+      detail: { routeId },
     });
     this.dispatchEvent(customEvent);
   }
@@ -168,22 +214,24 @@ export class RouteSelector extends HTMLElement {
     // Clear existing content.
     this.routeSelect.innerHTML = "";
     this.rrtRrqSelect.innerHTML = "";
-    const routeList = routes.split(/[,\s]+/).sort();
+    const routeList = enumerateRouteStringsAsDefinitions(
+      routes.split(/[,\s]+/).sort()
+    );
     this.routeGroups = {};
     for (const routeId of routeList) {
       try {
-        const [sr, rrt, rrq, dir] = splitRouteID(routeId);
-        if (!this.routeGroups[sr!]) {
-          this.routeGroups[sr!] = [];
+        const { sr } = routeId;
+        if (!this.routeGroups[sr]) {
+          this.routeGroups[sr] = [];
           const option = document.createElement("option");
           option.textContent = sr;
           this.routeSelect.appendChild(option);
         }
-        const rrtRrqList = this.routeGroups[sr!];
-        rrtRrqList.push(routeId);
+        const rrtRrqList = this.routeGroups[sr];
+        rrtRrqList.push(routeId.toString());
       } catch (err) {
         if (err instanceof RouteFormatError) {
-          this.dispatchInvalidRouteEvent(routeId);
+          this.dispatchInvalidRouteEvent(routeId.toString());
         } else {
           throw err;
         }
